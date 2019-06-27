@@ -1,5 +1,6 @@
-package example.micronaut
+package example.micronaut.controller
 
+import example.micronaut.Post
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Body
@@ -18,7 +19,7 @@ class PostsController {
     }
 
     @Get("/{id}")
-    //@Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     fun getOnePost(id: String): Post {
         return Post(
             title = "New Post",

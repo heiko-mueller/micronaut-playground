@@ -1,5 +1,6 @@
-package example.micronaut
+package example.micronaut.controller
 
+import example.micronaut.Post
 import io.micronaut.context.ApplicationContext
 import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
