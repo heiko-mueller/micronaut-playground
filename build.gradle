@@ -14,9 +14,8 @@ group "example.micronaut"
 
 repositories {
     mavenCentral()
-    maven {
-        url "https://dl.bintray.com/spekframework/spek-dev"
-    }
+    maven { url "https://jcenter.bintray.com" }
+    maven { url "https://dl.bintray.com/spekframework/spek-dev" }
 }
 
 dependencyManagement {
@@ -38,6 +37,7 @@ dependencies {
     compile "io.micronaut:micronaut-runtime"
     kapt "io.micronaut:micronaut-inject-java"
     kapt "io.micronaut:micronaut-validation"
+    developmentOnly "io.micronaut:micronaut-runtime-osx"
     kaptTest "io.micronaut:micronaut-inject-java"
     runtime "ch.qos.logback:logback-classic:1.2.3"
     runtime "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8"

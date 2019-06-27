@@ -1,3 +1,10 @@
 micronaut:
   application:
     name: complete
+
+---
+micronaut:
+  io:
+    watch:
+      paths: src/main
+      restart: true
