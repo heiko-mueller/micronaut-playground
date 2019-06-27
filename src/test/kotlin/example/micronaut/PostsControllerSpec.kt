@@ -1,6 +1,7 @@
 package example.micronaut
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.client.HttpClient
@@ -10,9 +11,8 @@ import org.spekframework.spek2.style.specification.describe
 import kotlin.test.assertEquals
 
 object PostsControllerSpec : Spek({
-    val id = "123456789"
     val allPosts = "{}"
-    val postForId = "{}"
+    val post = Post(title = "My new post", id = "my-new-post")
 
     describe("PostsController Suite") {
         val embeddedServer: EmbeddedServer = ApplicationContext.run(EmbeddedServer::class.java)
@@ -28,9 +28,14 @@ object PostsControllerSpec : Spek({
 
         describe("GET @ /posts/:id") {
             it("should respond with the expected post") {
-                val response: String = client.toBlocking().retrieve("/posts/$id")
+                val response: HttpResponse<Post> = client
+                    .toBlocking()
+                    .exchange(
+                        HttpRequest.GET<Post>("/posts/${post.id}"),
+                        Argument.of(Post::class.java)
+                    )
 
-                assertEquals(postForId, response)
+                assertEquals(post.id, response.body()!!.id)
             }
         }
 
@@ -40,8 +45,8 @@ object PostsControllerSpec : Spek({
                     .toBlocking()
                     .exchange(
                         HttpRequest.PUT(
-                            "/posts/$id",
-                            ""
+                            "/posts/${post.id}",
+                            post
                         )
                     )
 
