@@ -1,6 +1,7 @@
 package example.micronaut.controller
 
 import example.micronaut.Post
+import example.micronaut.store.Posts
 import io.micronaut.context.ApplicationContext
 import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
@@ -13,7 +14,6 @@ import kotlin.test.assertEquals
 
 object PostsControllerSpec : Spek({
     val allPosts = "{}"
-    val post = Post(title = "My new post", id = "my-new-post")
 
     describe("PostsController Suite") {
         val embeddedServer: EmbeddedServer = ApplicationContext.run(EmbeddedServer::class.java)
@@ -28,25 +28,31 @@ object PostsControllerSpec : Spek({
         }
 
         describe("GET @ /posts/:id") {
+            val id = "existent-id"
+            Posts.createPost(Post(id = id))
+
             it("should respond with the expected post") {
                 val response: HttpResponse<Post> = client
                     .toBlocking()
                     .exchange(
-                        HttpRequest.GET<Post>("/posts/${post.id}"),
+                        HttpRequest.GET<Post>("/posts/$id"),
                         Argument.of(Post::class.java)
                     )
 
-                assertEquals(post.id, response.body()!!.id)
+                assertEquals(id, response.body()!!.id)
             }
         }
 
         describe("PUT @ /posts/:id") {
+            val id = "non-existent-id"
+            val post = Post(id = id)
+
             it("should respond with 201") {
                 val response: HttpResponse<String> = client
                     .toBlocking()
                     .exchange(
                         HttpRequest.PUT(
-                            "/posts/${post.id}",
+                            "/posts/id",
                             post
                         )
                     )

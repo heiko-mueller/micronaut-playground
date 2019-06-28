@@ -1,9 +1,9 @@
 package example.micronaut
 
 data class Post(
-    val title: String = "New Post",
-    val content: String = "",
-    val author: String = "",
-    val id: String? = null,
-    val createdAt: String? = null
+    var title: String = "New Post",
+    var content: String = "",
+    var author: String = "",
+    var id: String? = null,
+    var createdAt: String? = null
 )

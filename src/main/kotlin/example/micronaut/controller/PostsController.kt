@@ -1,6 +1,8 @@
 package example.micronaut.controller
 
 import example.micronaut.Post
+import example.micronaut.store.Posts
+import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Body
@@ -20,20 +22,29 @@ class PostsController {
 
     @Get("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    fun getOnePost(id: String): Post {
-        return Post(
-            title = "New Post",
-            content = "Start writing...",
-            author = "You",
-            id = id,
-            createdAt = "2019-06-27"
-        )
+    fun getOnePost(id: String): HttpResponse<Post> {
+        Posts.getPost(id)?.let {
+            return HttpResponse.ok(it)
+        }
+
+        return HttpResponse.notFound()
     }
 
     @Put("/{id}")
     fun putAPost(id: String, @Body post: Post): HttpStatus {
-        println(post)
-        //TODO: save post
+        if (Posts.exists(id)) {
+            return HttpStatus.CONFLICT
+        }
+
+        try {
+            post.id = id
+            post.createdAt = "2019-06-27"
+            
+            Posts.createPost(post)
+        } catch (e: Exception) {
+            return HttpStatus.INTERNAL_SERVER_ERROR
+        }
+
         return HttpStatus.CREATED
     }
 }
